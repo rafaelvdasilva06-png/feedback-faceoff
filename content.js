@@ -1,17 +1,17 @@
 /* Feedback Face-Off content: people and moments (based on Nova SBE Communication eJournal 4). */
 (function(){
 const P = {
-  marta:    { name: "Marta",    role: "Junior analyst",       tag: "The Anxious Newcomer",     col: "#cfe3f5", desc: "3 weeks in. Needs reassurance. Hates being criticised in public." },
-  rui:      { name: "Rui",      role: "Senior technician",    tag: "The Defensive Expert",     col: "#e2dccf", desc: "15 years' experience. Wants respect. Hates being told how to do his job." },
-  carolina: { name: "Carolina", role: "Operations lead, your peer", tag: "The Direct Driver", col: "#f3d6d1", desc: "Fast and results-focused. Wants you to get to the point." },
-  leonor:   { name: "Leonor",   role: "Customer service lead", tag: "The Big-Picture Optimist", col: "#fbe9b4", desc: "Full of energy. Agrees quickly, then forgets the details." },
-  diogo:    { name: "Diogo",    role: "Data analyst",         tag: "The Quiet Analyst",        col: "#d5e6dc", desc: "Logical and prepared. Hates being put on the spot." },
-  ana:      { name: "Ana",      role: "Shift coordinator",    tag: "The People-Pleaser",       col: "#ead7ef", desc: "Kind, avoids conflict, finds it hard to say no." },
-  tomas:    { name: "Tomás",    role: "Junior associate",     tag: "The Nervous Presenter",    col: "#dfe4ea", desc: "Capable, but loses confidence fast when something goes wrong." }
+  marta:    { name: "Marta",    role: "Junior analyst",       tag: "The Anxious Newcomer",     col: "#cfe3f5", desc: "3 weeks in. Needs reassurance. Hates being criticised in public." , look: { skin: '#f1c9a5', hair: '#3b2a20', style: 'long', female: true, top: '#c9dcef', bottom: '#2a3550', h: 1.66 }, voice: { female: true, pitch: 1.15, rate: .98 } },
+  rui:      { name: "Rui",      role: "Senior technician",    tag: "The Defensive Expert",     col: "#e2dccf", desc: "15 years' experience. Wants respect. Hates being told how to do his job." , look: { skin: '#e0ac85', hair: '#8f8f8f', style: 'short', top: '#2b3a55', bottom: '#4a4f57', h: 1.78 }, voice: { female: false, pitch: .8, rate: .92 } },
+  carolina: { name: "Carolina", role: "Operations lead, your peer", tag: "The Direct Driver", col: "#f3d6d1", desc: "Fast and results-focused. Wants you to get to the point." , look: { skin: '#f5d6bd', hair: '#1f1612', style: 'bun', female: true, top: '#ffffff', jacket: '#16191e', bottom: '#16191e', h: 1.72 }, voice: { female: true, pitch: .95, rate: 1.12 } },
+  leonor:   { name: "Leonor",   role: "Customer service lead", tag: "The Big-Picture Optimist", col: "#fbe9b4", desc: "Full of energy. Agrees quickly, then forgets the details." , look: { skin: '#f1c9a5', hair: '#d8b56a', style: 'long', female: true, top: '#f2c14e', bottom: '#2f4f7f', h: 1.68 }, voice: { female: true, pitch: 1.25, rate: 1.1 } },
+  diogo:    { name: "Diogo",    role: "Data analyst",         tag: "The Quiet Analyst",        col: "#d5e6dc", desc: "Logical and prepared. Hates being put on the spot." , look: { skin: '#c68863', hair: '#1b1b1b', style: 'short', top: '#3f6f56', bottom: '#3a3f47', glasses: true, h: 1.76 }, voice: { female: false, pitch: .95, rate: .9 } },
+  ana:      { name: "Ana",      role: "Shift coordinator",    tag: "The People-Pleaser",       col: "#ead7ef", desc: "Kind, avoids conflict, finds it hard to say no." , look: { skin: '#8d5a3b', hair: '#1b1b1b', style: 'ponytail', female: true, top: '#b49cc8', bottom: '#2a2f38', h: 1.64 }, voice: { female: true, pitch: 1.1, rate: .95 } },
+  tomas:    { name: "Tomás",    role: "Junior associate",     tag: "The Nervous Presenter",    col: "#dfe4ea", desc: "Capable, but loses confidence fast when something goes wrong." , look: { skin: '#e0ac85', hair: '#2b1d15', style: 'short', top: '#ffffff', jacket: '#8c96a3', bottom: '#8c96a3', h: 1.8 }, voice: { female: false, pitch: 1.05, rate: 1.08 } }
 };
 
 const MOMENTS = [
-  { id: "m-timing", who: "marta", type: "mc", concept: "Criterion 1 · Timing",
+  { id: "m-timing", line: "Morning! Here's the sales report… sorry, I know it's late again. The meeting already started, right?", who: "marta", type: "mc", concept: "Criterion 1 · Timing",
     situ: "Her daily sales report has arrived two hours late for three days in a row. The morning meeting runs on old numbers.",
     q: "When do you give the feedback?",
     o: [
@@ -21,7 +21,7 @@ const MOMENTS = [
       { t: "Mention it in tomorrow's team meeting.", p: 0 }
     ],
     why: "Soon enough to stop it happening again, and at a moment she can really listen. Waiting a month lets the problem grow; a quick chat message gives her no support." },
-  { id: "m-context", who: "rui", type: "mc", concept: "Criterion 2 · Context",
+  { id: "m-context", extras: 3, line: "The checklist? I know these machines better than anyone. I don't need a form for that.", who: "rui", type: "mc", concept: "Criterion 2 · Context",
     situ: "He skipped the safety checklist sign-off twice this week. Right now he's at the machines with three younger technicians.",
     q: "Where do you raise it?",
     o: [
@@ -31,7 +31,7 @@ const MOMENTS = [
       { t: "At next month's safety meeting, to everyone.", p: 0 }
     ],
     why: "Context includes who is present. Correcting an expert in front of juniors humiliates him and guarantees defensiveness. An email is private but feels bureaucratic." },
-  { id: "m-sbi-carolina", who: "carolina", type: "fill", concept: "SBI model · Situation, Behaviour, Impact",
+  { id: "m-sbi-carolina", line: "You wanted to see me? I've got two minutes. Go.", who: "carolina", type: "fill", concept: "SBI model · Situation, Behaviour, Impact",
     situ: "She approved a big supplier order without checking stock. The warehouse is now full.",
     q: "Build your feedback. She likes it short and factual.",
     parts: ["", " ", ", so ", ". Can we add a stock check to approvals?"],
@@ -41,7 +41,7 @@ const MOMENTS = [
       { label: "Impact", opts: ["Thursday's delivery has nowhere to go", "it was a disaster", "everyone is annoyed with you"], ok: 0 }
     ],
     why: "Situation anchored in time, behaviour you could observe, impact on the task. 'Careless' and 'a disaster' are judgements, and judgements start arguments." },
-  { id: "m-descriptive", who: "leonor", type: "mc", concept: "Criterion 3 · Descriptive",
+  { id: "m-descriptive", line: "Good news! I told three more customers we'd call them back within the hour. They loved it!", who: "leonor", type: "mc", concept: "Criterion 3 · Descriptive",
     situ: "She promises customers a callback within the hour. Yesterday 40% of callbacks took over four hours, and two customers complained.",
     q: "Which sentence is descriptive feedback?",
     o: [
@@ -51,7 +51,7 @@ const MOMENTS = [
       { t: "\"If this continues, you'll never be a good team lead.\"", p: 0 }
     ],
     why: "Concrete facts she can check, no labels. 'Always' is a generalisation, and 'you'll never be…' is exactly the destructive judgement the eJournal warns against." },
-  { id: "m-rule2", who: "diogo", type: "mc", concept: "Rule 2 · Within their power to change",
+  { id: "m-rule2", line: "Hi… I finished the staffing dashboard. Tuesdays look overstaffed, by the way. I didn't want to interrupt the meeting.", who: "diogo", type: "mc", concept: "Rule 2 · Within their power to change",
     situ: "His data showed Tuesdays were overstaffed, but he stayed silent in the planning meeting and the team added a shift anyway.",
     q: "Which feedback is about something he can actually change?",
     o: [
@@ -61,7 +61,7 @@ const MOMENTS = [
       { t: "\"You're just too shy for this role.\"", p: 0 }
     ],
     why: "Feedback must be about something within the person's power to change. He can't change his personality, but he can share one insight. 'Speak up more' is right but vague." },
-  { id: "m-counter", who: "ana", type: "mc", concept: "Criterion 5 · Counter-feedback",
+  { id: "m-counter", line: '…Okay. Sorry.', who: "ana", type: "mc", concept: "Criterion 5 · Counter-feedback",
     situ: "You've just told her that accepting last-minute shift swaps left the weekend understaffed. She goes quiet and looks down.",
     q: "What do you do next?",
     o: [
@@ -71,7 +71,7 @@ const MOMENTS = [
       { t: "Add two more examples of the problem.", p: 0 }
     ],
     why: "Feedback only works if you let the other person explain their actions. Her answer will show you the real cause. Saying 'it's fine' is kind but cancels the message." },
-  { id: "m-harbour", who: "tomas", type: "mc", concept: "Criterion 4 · A safe harbour",
+  { id: "m-harbour", line: "So, as you can see on this slide… um, sorry, that's the wrong slide… I…", who: "tomas", type: "mc", concept: "Criterion 4 · A safe harbour",
     situ: "In a client presentation, Tomás clicks to the wrong slide, loses his place and freezes. The client is watching.",
     q: "What do you do in the moment?",
     o: [
@@ -81,7 +81,7 @@ const MOMENTS = [
       { t: "Point out the mistake to the client and apologise for him.", p: 0 }
     ],
     why: "Like the conductor with Maria João Pires: don't underline the failure, and don't leave a silence that kills confidence. Rescue him and give him back the stage." },
-  { id: "m-recv-fill", who: "carolina", type: "fill", concept: "Receiving feedback · No defensiveness",
+  { id: "m-recv-fill", line: 'Honestly? Your updates in the ops call take way too long. Nobody knows what you need from us.', who: "carolina", type: "fill", concept: "Receiving feedback · No defensiveness",
     situ: "After the ops call, she tells you: \"Your updates take way too long. Nobody knows what you need from us.\"",
     q: "Build your reply without getting defensive.",
     parts: ["", " ", " ", ""],
@@ -91,7 +91,7 @@ const MOMENTS = [
       { label: "Act", opts: ["Would headline plus the decision I need work on Thursday?", "Let's see how it goes.", "I'll think about it."], ok: 0 }
     ],
     why: "Thank, own your part, commit to a concrete change. Explaining why you were right is the defensive reflex that stops people giving you feedback." },
-  { id: "m-recv-mc", who: "marta", type: "mc", concept: "Receiving feedback · No defensiveness",
+  { id: "m-recv-mc", line: 'Can I say something? When you corrected my report in front of everyone yesterday… I felt really embarrassed.', who: "marta", type: "mc", concept: "Receiving feedback · No defensiveness",
     situ: "Yesterday you corrected her report in front of the team. Today she says, nervously: \"That made me feel really embarrassed.\"",
     q: "How do you respond?",
     o: [
@@ -101,7 +101,7 @@ const MOMENTS = [
       { t: "\"You'll need to get used to feedback here.\"", p: 0 }
     ],
     why: "Thank her, own it and change. 'Sorry you felt that way' puts the problem on her feelings, not your action." },
-  { id: "m-sbi-ana", who: "ana", type: "fill", concept: "SBI model · Situation, Behaviour, Impact",
+  { id: "m-sbi-ana", line: "Hi! I approved two more swaps for this weekend. No problem, I'll cover the gap myself!", who: "ana", type: "fill", concept: "SBI model · Situation, Behaviour, Impact",
     situ: "She keeps approving last-minute shift swaps and covering the gaps herself.",
     q: "Build warm, specific feedback.",
     parts: ["", " ", ", so ", ". Can we agree a 48-hour rule together?"],
@@ -111,7 +111,7 @@ const MOMENTS = [
       { label: "Impact", opts: ["we were short-staffed and you worked six days straight", "it was a big problem", "everyone is tired of it"], ok: 0 }
     ],
     why: "Describe the behaviour, not her personality. 'Can't say no' labels her; 'swaps approved with under a day's notice' is something she can change." },
-  { id: "m-destructive", who: "rui", type: "mc", concept: "Rule 1 · Constructive, not destructive",
+  { id: "m-destructive", line: "I've done this job for fifteen years.", who: "rui", type: "mc", concept: "Rule 1 · Constructive, not destructive",
     situ: "When you raise the skipped checklist, he snaps: \"I've done this job for 15 years.\"",
     q: "What's your reply?",
     o: [
@@ -121,7 +121,7 @@ const MOMENTS = [
       { t: "\"Fine, skip it if you're sure.\"", p: 0 }
     ],
     why: "Constructive means building him up while still fixing the problem. Dismissing his experience destroys trust, and giving in drops the feedback altogether." },
-  { id: "m-inner", who: "leonor", type: "mc", concept: "Criterion 1 · Inner timing",
+  { id: "m-inner", line: 'That customer just shouted at me for ten minutes…', who: "leonor", type: "mc", concept: "Criterion 1 · Inner timing",
     situ: "You need to talk about callback promises, but she has just come off a call with a furious customer and is visibly upset.",
     q: "When do you talk to her?",
     o: [

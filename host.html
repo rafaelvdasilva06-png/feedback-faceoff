@@ -9,121 +9,128 @@
 <link rel="stylesheet" href="style.css">
 <style>
 html,body{height:100%;overflow:hidden}
-.stage{position:fixed;inset:0;display:flex;flex-direction:column;padding:clamp(16px,2.2vw,36px) clamp(20px,3vw,56px)}
+#scene3d{position:fixed;inset:0;z-index:0;background:#eef2f6}
+#scene3d canvas{display:block;width:100%!important;height:100%!important}
+.stage{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;padding:clamp(14px,2vw,32px) clamp(18px,2.6vw,48px);pointer-events:none}
+.stage>*{pointer-events:auto}
 .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:44px}
-.bar .r{display:flex;gap:14px;align-items:center;color:var(--soft);font-weight:600}
-.codepill{background:var(--lime);border:0;border-radius:10px;padding:6px 12px;font-weight:800;letter-spacing:.12em;color:var(--ink)}
-.snd{background:none;border:1px solid var(--line);border-radius:10px;width:40px;height:40px;display:grid;place-items:center;color:var(--soft)}
-.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:safe center;overflow-y:auto;padding-top:8px}
-.rv .qtext{font-size:clamp(24px,2.2vw,36px);margin-bottom:14px}.rv .tile{padding:12px 16px;font-size:clamp(15px,1.15vw,19px)}.rv .sent{font-size:clamp(17px,1.5vw,24px);line-height:1.85;padding:12px 18px;margin-bottom:10px}.rv .right div{padding:8px 16px}.rv .explain{margin-top:12px;padding:12px 18px}.rv .qfoot{margin-top:10px}
-.rv .situ{font-size:clamp(16px,1.3vw,21px)}
-.right{display:grid;gap:8px;margin-top:4px}.right div{display:flex;justify-content:space-between;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:clamp(15px,1.2vw,19px);font-weight:600}.right b{color:var(--good);white-space:nowrap}
+.bar .mark,.bar .r{background:#ffffffe6;border:1px solid var(--line);border-radius:14px;padding:6px 12px 6px 8px;box-shadow:0 6px 20px #10141814;backdrop-filter:blur(8px)}
+.bar .r{display:flex;gap:12px;align-items:center;color:var(--soft);font-weight:700;padding:6px 6px 6px 14px}
+.codepill{background:var(--lime);border-radius:9px;padding:5px 11px;font-weight:800;letter-spacing:.12em;color:var(--ink)}
+.snd{background:none;border:1px solid var(--line);border-radius:10px;width:38px;height:38px;display:grid;place-items:center;color:var(--soft)}
+.main{flex:1;min-height:0;position:relative;pointer-events:none}
+.main>*{pointer-events:auto}
+.float{background:#ffffffee;border:1px solid var(--line);border-radius:26px;box-shadow:0 24px 60px #1014182a;backdrop-filter:blur(14px)}
 /* setup */
-.setup{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:56px;align-items:center}
-.setup h1{font-size:clamp(44px,5.4vw,84px);line-height:1;letter-spacing:-.04em;margin:14px 0 18px}
+.setup{position:absolute;left:0;top:50%;transform:translateY(-50%);width:min(640px,48vw);padding:clamp(24px,2.6vw,40px)}
+.setup h1{font-size:clamp(40px,4.6vw,76px);line-height:1;letter-spacing:-.04em;margin:12px 0 16px}
 .setup h1 em{font-style:normal;background:var(--lime);padding:0 .12em;border-radius:10px}
-.setup p{font-size:clamp(17px,1.4vw,21px);color:var(--body);margin:0 0 26px;max-width:40ch}
-.how{display:grid;gap:12px}
-.how div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;align-items:center}
-.how b{display:block;font-size:17px}.how span{color:var(--soft);font-size:15px}
-.how .n{width:44px;height:44px;border-radius:12px;background:var(--lime);display:grid;place-items:center;font-weight:800;color:var(--ink)}
-.opts-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.seg{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:4px}
+.setup p{font-size:clamp(16px,1.25vw,20px);color:var(--body);margin:0 0 20px;max-width:44ch}
+.how{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 22px}
+.how div{background:var(--card);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--soft)}
+.how b{display:block;color:var(--ink);font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
 .seg button{background:none;border:0;padding:8px 14px;border-radius:9px;font-weight:700;color:var(--soft)}
 .seg button.on{background:var(--ink);color:#fff}
 /* lobby */
-.lobby{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(24px,3.5vw,64px);align-items:center;height:100%}
-.joinbox h1{font-size:clamp(40px,4.4vw,72px);line-height:1;letter-spacing:-.04em;margin:8px 0 10px}
-.joinbox p{font-size:clamp(17px,1.4vw,22px);color:var(--body);margin:0 0 22px}
-.qrw{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
-.qr{background:#fff;padding:14px;border-radius:22px;border:1px solid var(--line);box-shadow:0 12px 40px #10141814}
-.qr img,.qr canvas{display:block;width:min(30vh,300px)!important;height:min(30vh,300px)!important}
-.code{font-size:clamp(48px,5vw,84px);font-weight:800;letter-spacing:.1em;color:var(--ink);line-height:1;background:var(--lime);display:inline-block;padding:6px 16px;border-radius:14px}
+.lobby{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(16px,2.4vw,40px);align-items:center}
+.joinbox{padding:clamp(22px,2.4vw,36px)}
+.joinbox h1{font-size:clamp(34px,3.6vw,60px);line-height:1;letter-spacing:-.04em;margin:8px 0 8px}
+.joinbox p{font-size:clamp(16px,1.2vw,20px);color:var(--body);margin:0 0 18px}
+.qrw{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.qr{background:#fff;padding:12px;border-radius:18px;border:1px solid var(--line)}
+.qr img,.qr canvas{display:block;width:min(28vh,270px)!important;height:min(28vh,270px)!important}
 .qrw .lbl{display:block;margin-bottom:8px}
-.url{font-size:clamp(15px,1.2vw,19px);color:var(--body);margin-top:10px;word-break:break-all}
-.crowd{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:clamp(20px,2.4vw,34px);height:min(72vh,720px);display:flex;flex-direction:column}
-.cnt{display:flex;align-items:center;gap:22px;margin-bottom:18px}
-.cnt .num{font-size:clamp(64px,7vw,112px);font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--ink);background:var(--lime);padding:10px 26px;border-radius:18px;font-variant-numeric:tabular-nums}
-.cnt b{display:block;font-size:clamp(20px,1.8vw,28px)}
+.code{font-size:clamp(44px,4.4vw,76px);font-weight:800;letter-spacing:.1em;line-height:1;background:var(--lime);display:inline-block;padding:6px 16px;border-radius:14px}
+.url{font-size:clamp(14px,1.1vw,18px);color:var(--body);margin-top:10px;word-break:break-all}
+.crowd{padding:clamp(20px,2.2vw,32px);height:min(70vh,680px);display:flex;flex-direction:column}
+.cnt{display:flex;align-items:center;gap:20px;margin-bottom:16px}
+.cnt .num{font-size:clamp(60px,6.4vw,104px);font-weight:800;letter-spacing:-.05em;line-height:1;background:var(--lime);padding:8px 24px;border-radius:18px;font-variant-numeric:tabular-nums}
+.cnt b{display:block;font-size:clamp(20px,1.7vw,26px)}
 .cnt span{color:var(--soft)}
 .names{flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
-.names span{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 12px;font-size:clamp(16px,1.3vw,20px);font-weight:700;animation:pop .45s ease-out both}
-.empty{color:var(--soft);font-size:20px;margin:auto;text-align:center}
+.names span{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 12px;font-size:clamp(16px,1.25vw,20px);font-weight:700;animation:pop .45s ease-out both}
+.empty{color:var(--soft);font-size:19px;margin:auto;text-align:center}
 .empty i{display:block;width:12px;height:12px;border-radius:50%;background:var(--ink);margin:0 auto 14px;animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.8);opacity:.3}}
-.lfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
+.lfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
 .link{background:none;border:0;color:var(--soft);text-decoration:underline;font-size:15px;padding:8px 0}
-/* question */
-.qwrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:clamp(20px,2.6vw,44px);align-items:start}
-.person{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:clamp(18px,2vw,28px)}
-.ph{display:flex;gap:16px;align-items:center;margin-bottom:14px}
-.ph .av{width:clamp(56px,5vw,76px);height:clamp(56px,5vw,76px);font-size:clamp(24px,2.2vw,32px)}
-.ph b{display:block;font-size:clamp(22px,2vw,30px);letter-spacing:-.02em}
-.ph small{color:var(--soft);font-size:clamp(14px,1.1vw,17px)}
-.person .desc{color:var(--body);font-size:clamp(15px,1.15vw,18px);margin:10px 0 0}
-.situ{font-size:clamp(19px,1.6vw,26px);line-height:1.4;font-weight:600;margin:18px 0 0;padding-top:16px;border-top:1px solid var(--line)}
-.qh{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.qtext{font-size:clamp(28px,2.7vw,46px);line-height:1.12;letter-spacing:-.025em;font-weight:800;margin:0 0 20px}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.tile{position:relative;background:var(--card);border:2px solid var(--line);border-left:10px solid var(--t);border-radius:18px;padding:16px 18px 16px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;font-size:clamp(16px,1.35vw,22px);line-height:1.35;font-weight:600;overflow:hidden}
-.tile .L{width:clamp(30px,2.4vw,40px);height:clamp(30px,2.4vw,40px);border-radius:10px;background:var(--t);color:#fff;display:grid;place-items:center;font-weight:800}
-.tile .fill{position:absolute;left:0;bottom:0;height:6px;background:var(--t);transition:width 1s ease}
-.tile .cnt2{position:absolute;right:14px;top:10px;font-weight:800;font-size:clamp(16px,1.3vw,22px);color:var(--t)}
-.tile.best{border-color:var(--good);border-left-color:var(--good);background:var(--goodbg);box-shadow:0 0 0 3px #1d7a4c33}
-.tile.best::after{content:"✓ Best";position:absolute;right:14px;bottom:12px;font-size:14px;font-weight:800;color:var(--good)}
-.tile.part::after{content:"Partly right";position:absolute;right:14px;bottom:12px;font-size:13px;font-weight:800;color:var(--mid)}
-.tile.dim{opacity:.45}
-.sent{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 22px;font-size:clamp(20px,1.8vw,30px);line-height:2;font-weight:600;margin-bottom:14px}
-.slot{display:inline-block;border-bottom:3px dashed var(--soft);padding:0 8px;line-height:1.4;color:var(--soft);font-weight:700}
+/* in the office */
+.ntag{position:absolute;left:0;top:6px;display:flex;gap:14px;align-items:center;padding:12px 18px 12px 12px;max-width:min(520px,44vw);animation:rise .5s ease-out both}
+.ntag .av{width:54px;height:54px;font-size:22px}
+.ntag b{display:block;font-size:clamp(19px,1.6vw,24px);letter-spacing:-.01em}
+.ntag small{display:block;color:var(--soft);font-size:14px;margin:1px 0 6px}
+.ntag p{margin:6px 0 0;font-size:14px;color:var(--body)}
+.subs{position:absolute;left:0;bottom:4px;max-width:min(700px,50vw);padding:16px 22px;font-size:clamp(18px,1.6vw,26px);line-height:1.4;font-weight:600;animation:rise .4s ease-out both}
+.subs .who{display:block;font-size:13px;font-weight:800;color:var(--soft);margin-bottom:2px;letter-spacing:.06em;text-transform:uppercase}
+.listen{position:absolute;right:0;bottom:8px;padding:12px 18px;font-weight:700;color:var(--soft);display:flex;gap:10px;align-items:center}
+.listen i{width:10px;height:10px;border-radius:50%;background:var(--bad);animation:pulse 1.2s infinite}
+.qpanel{position:absolute;right:0;top:50%;transform:translateY(-50%);width:min(760px,50vw);max-height:100%;overflow:auto;padding:clamp(18px,1.8vw,28px);animation:slidein .5s ease-out both}
+@keyframes slidein{from{opacity:0;transform:translate(30px,-50%)}to{opacity:1;transform:translate(0,-50%)}}
+.ctxl{font-size:clamp(14px,1.05vw,17px);color:var(--body);margin:0 0 10px;border-left:3px solid var(--lime);padding-left:10px}
+.qh{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.qtext{font-size:clamp(22px,2vw,34px);line-height:1.15;letter-spacing:-.025em;font-weight:800;margin:8px 0 12px}
+.tiles{display:grid;grid-template-columns:1fr;gap:9px}
+.tile{position:relative;background:#fff;border:2px solid var(--line);border-left:9px solid var(--t);border-radius:14px;padding:11px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;font-size:clamp(15px,1.15vw,19px);line-height:1.3;font-weight:600;overflow:hidden}
+.tile .L{width:32px;height:32px;border-radius:9px;background:var(--t);color:#fff;display:grid;place-items:center;font-weight:800}
+.tile .fill{position:absolute;left:0;bottom:0;height:5px;background:var(--t);transition:width 1s ease}
+.tile .cnt2{font-weight:800;font-size:clamp(15px,1.15vw,19px);color:var(--t);white-space:nowrap}
+.tile .bdg{display:block;font-size:12px;font-weight:800;margin-top:2px}
+.tile.best{border-color:var(--good);border-left-color:var(--good);background:var(--goodbg)}.tile.best .bdg{color:var(--good)}
+.tile.part .bdg{color:var(--mid)}
+.tile.dim{opacity:.5}
+.sent{background:var(--card);border-radius:14px;padding:12px 16px;font-size:clamp(17px,1.45vw,24px);line-height:1.9;font-weight:600;margin-bottom:10px}
+.slot{display:inline-block;border-bottom:3px dashed var(--soft);padding:0 6px;line-height:1.35;color:var(--soft);font-weight:700}
 .slot.ok{border-bottom-style:solid;border-color:var(--good);color:var(--good)}
-.blanks{display:grid;gap:10px}
-.blank{display:grid;grid-template-columns:clamp(110px,9vw,150px) minmax(0,1fr);gap:12px;align-items:center}
-.blank .bl{font-weight:800;color:var(--soft);font-size:clamp(14px,1.1vw,17px)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{background:var(--card2);border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;font-size:clamp(14px,1.15vw,18px);font-weight:600}
-.chip.ok{border-color:var(--good);background:var(--goodbg);color:var(--good)}
-.chip .pc{color:var(--soft);font-weight:800;margin-left:8px}
-.timer{display:flex;align-items:center;gap:12px}
-.ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:24px;font-variant-numeric:tabular-nums}
-.ring span{width:52px;height:52px;border-radius:50%;background:var(--bg);display:grid;place-items:center}
-.answered{font-size:18px;font-weight:700}
-.answered b{color:var(--ink);font-size:26px}
-.explain{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 20px;font-size:clamp(16px,1.3vw,21px);line-height:1.45;animation:rise .5s ease-out both}
-.explain b{color:var(--ink)}
-.top5{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-.top5 div{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 8px;font-weight:700;animation:rise .5s ease-out both}
-.top5 .rk{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800}
+.blanks{display:grid;gap:8px}
+.blank{display:grid;grid-template-columns:clamp(100px,8vw,130px) minmax(0,1fr);gap:10px;align-items:center}
+.blank .bl{font-weight:800;color:var(--soft);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-size:clamp(13px,1.05vw,16px);font-weight:600}
+.right{display:grid;gap:6px}
+.right div{display:flex;justify-content:space-between;gap:12px;background:var(--card);border-radius:12px;padding:8px 14px;font-size:clamp(14px,1.1vw,18px);font-weight:600}
+.right b{color:var(--good);white-space:nowrap}
+.ring{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:22px;flex:none;font-variant-numeric:tabular-nums}
+.ring span{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.answered{font-size:17px;font-weight:700}.answered b{font-size:24px}
+.explain{margin-top:12px;background:var(--card);border-radius:14px;padding:12px 16px;font-size:clamp(14px,1.1vw,18px);line-height:1.45;animation:rise .5s ease-out both}
+.mood{margin-top:10px;font-size:15px;font-weight:700;display:flex;gap:8px;align-items:center}
+.mood i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.top5{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.top5 div{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 6px;font-weight:700;font-size:15px;animation:rise .5s ease-out both}
+.top5 .rk{width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
 .top5 .g{color:var(--good);font-weight:800}
-.qfoot{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
+.qfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
 /* final */
-.final{max-width:1100px;margin:0 auto;text-align:center;width:100%}
-.final h2{font-size:clamp(34px,3.6vw,58px);letter-spacing:-.03em;margin:10px 0 0;min-height:1.1em}
-.pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:end;margin:30px auto 8px;max-width:900px}
+.final{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1060px,94%);text-align:center;padding:clamp(20px,2.4vw,34px);max-height:100%;overflow:auto}
+.final h2{font-size:clamp(30px,3.2vw,52px);letter-spacing:-.03em;margin:8px 0 0;min-height:1.1em}
+.pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end;margin:24px auto 6px;max-width:860px}
 .ps{opacity:0;transform:translateY(50px) scale(.95);transition:opacity .7s,transform .8s cubic-bezier(.2,.9,.3,1.25);display:flex;flex-direction:column;align-items:center}
 .ps.in{opacity:1;transform:none}
-.ps .av{width:clamp(64px,6vw,96px);height:clamp(64px,6vw,96px);font-size:clamp(26px,2.6vw,40px);margin-bottom:12px;box-shadow:0 8px 24px #10141822}
-.ps .nm{font-size:clamp(20px,1.9vw,30px);font-weight:800;margin-bottom:10px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.blk{width:100%;background:var(--card);border:1px solid var(--line);border-radius:22px 22px 8px 8px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-.blk .md{font-size:clamp(34px,3.4vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1}
-.blk .sc{color:var(--soft);font-size:clamp(16px,1.3vw,20px);font-variant-numeric:tabular-nums;margin-top:6px}
-.p1 .blk{min-height:clamp(170px,22vh,250px);background:var(--lime);border-color:var(--lime);box-shadow:0 14px 40px #ffd84a55}.p1 .md{color:var(--ink)}.p1 .sc{color:var(--ink)}
-.p2 .blk{min-height:clamp(130px,16vh,190px)}.p2 .md{color:var(--soft)}
-.p3 .blk{min-height:clamp(100px,12vh,150px)}.p3 .md{color:#b06a2c}
-.board{opacity:0;transition:opacity .8s;margin:18px auto 0;max-width:900px;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;text-align:left}
+.ps .av{width:clamp(60px,5.6vw,90px);height:clamp(60px,5.6vw,90px);font-size:clamp(24px,2.4vw,36px);margin-bottom:10px;box-shadow:0 8px 24px #10141822}
+.ps .nm{font-size:clamp(19px,1.8vw,28px);font-weight:800;margin-bottom:8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.blk{width:100%;background:var(--card);border:1px solid var(--line);border-radius:20px 20px 8px 8px;padding:16px 12px}
+.blk .md{font-size:clamp(32px,3.2vw,52px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.blk .sc{color:var(--soft);font-size:clamp(15px,1.25vw,19px);font-variant-numeric:tabular-nums;margin-top:6px}
+.p1 .blk{min-height:clamp(150px,20vh,230px);background:var(--lime);border-color:var(--lime);box-shadow:0 14px 40px #ffd84a66}.p1 .sc{color:var(--ink)}
+.p2 .blk{min-height:clamp(115px,15vh,175px)}.p2 .md{color:var(--soft)}
+.p3 .blk{min-height:clamp(90px,11vh,135px)}.p3 .md{color:#b06a2c}
+.board{opacity:0;transition:opacity .8s;margin:14px auto 0;max-width:860px;display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;text-align:left}
 .board.in{opacity:1}
-.board div{display:grid;grid-template-columns:30px 12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;border-radius:12px;background:var(--card)}
+.board div{display:grid;grid-template-columns:30px 12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 12px;border-radius:10px;background:var(--card)}
 .board .rk{color:var(--soft);font-weight:800}.board .nm2{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.board .s{font-weight:800;font-variant-numeric:tabular-nums}
-.fbtn{margin-top:22px;display:flex;gap:12px;justify-content:center}
+.fbtn{margin-top:18px;display:flex;gap:12px;justify-content:center}
 .conn{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:var(--bad);color:#fff;font-weight:800;padding:8px 14px;border-radius:10px;z-index:5}
-@media (max-width:900px){html,body{overflow:auto}.stage{position:static;min-height:100%}.setup,.lobby,.qwrap{grid-template-columns:minmax(0,1fr)}.tiles{grid-template-columns:minmax(0,1fr)}.crowd{height:auto;min-height:300px}}
+.no3d #scene3d{background:#fff}
+@media (max-width:900px){.lobby{grid-template-columns:1fr;overflow:auto}.qpanel,.setup{width:auto;left:0;right:0}.subs,.ntag{max-width:none;right:0}}
 </style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
 </head>
 <body>
+<div id="scene3d"></div>
 <div class="stage">
-  <div class="bar">
-    <span class="mark"><i></i>Feedback Face-Off</span>
-    <div class="r" id="barR"></div>
-  </div>
+  <div class="bar"><span class="mark"><i></i>Feedback Face-Off</span><div class="r" id="barR"></div></div>
   <div class="main" id="ui"></div>
 </div>
 <div class="conn hidden" id="conn">Reconnecting to the live server…</div>
@@ -134,21 +141,81 @@ html,body{height:100%;overflow:hidden}
 <script src="config.js"></script>
 <script src="common.js"></script>
 <script src="content.js"></script>
-<script>
-{
+<script type="module">
+import { createOffice, ambience } from './office.js';
+
 const $ = s => document.querySelector(s), esc = U.esc, ls = U.ls, F = window.FF;
 const net = U.net(), ui = $('#ui');
 const L = ['A','B','C','D'];
 const BOTS = ['Inês','Tomás','Beatriz','Miguel','Sofia'];
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const initials = n => String(n).trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
-const pace = ls.get('ff_pace', 'normal');
+const initials = n => String(n).replace(/\(.*?\)/g, '').replace(/[^\p{L}\s]/gu, '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 let S = ls.get('ff_host', null) || { phase: 'setup' };
-let players = {}, answers = {}, unsubs = [], tickT = null, finalBuilt = false, seen = new Set(), lastTick = null;
+let players = {}, answers = {}, unsubs = [], finalBuilt = false, seen = new Set(), lastTick = null, seq = 0, subs = null;
 const saveS = () => ls.set('ff_host', S);
 const G = p => `games/${S.code}/${p}`;
 const durFor = m => (m.type === 'fill' ? 45 : 30) * 1000 * (ls.get('ff_pace', 'normal') === 'relaxed' ? 1.5 : 1);
 const joinUrl = () => location.href.replace(/host\.html.*$/, '').replace(/[?#].*$/, '') + '#' + S.code;
+
+/* ---------- 3D office (falls back to a plain screen if WebGL is unavailable) ---------- */
+let O = null;
+if (!/[?&]lite/.test(location.search)) { try { O = createOffice($('#scene3d')) } catch (e) { console.warn('3D off', e) } }
+if (!O) document.body.classList.add('no3d');
+const amb = ambience(() => U.sfx.muted);
+
+/* ---------- voices ---------- */
+const synth = window.speechSynthesis;
+let voices = [];
+const loadVoices = () => { try { voices = synth ? synth.getVoices().filter(v => /^en/i.test(v.lang)) : [] } catch (e) { voices = [] } };
+loadVoices(); if (synth) synth.onvoiceschanged = loadVoices;
+const FEM = /female|samantha|victoria|karen|moira|tessa|fiona|serena|susan|zira|hazel|kate|libby|sonia|aria|jenny|emma|amy|joanna|salli|kimberly|ava|allison|martha/i;
+const MAL = /\bmale|daniel|alex\b|fred|oliver|george|ryan|guy|david|mark|james|arthur|thomas|brian|matthew|joey|aaron|reed|rishi/i;
+function pickVoice(female, idx = 0){
+  const pool = voices.filter(v => female ? FEM.test(v.name) : MAL.test(v.name));
+  const list = (pool.length ? pool : voices).slice().sort((a, b) => (/GB|UK/i.test(b.lang + b.name) ? 1 : 0) - (/GB|UK/i.test(a.lang + a.name) ? 1 : 0));
+  return list.length ? list[idx % list.length] : null;
+}
+function say(text, who, v = {}, actorTalk){
+  return new Promise(res => {
+    subs = { who, text }; drawSubs();
+    const done = () => { if (actorTalk) actorTalk(false); res() };
+    if (actorTalk) actorTalk(true);
+    const est = 900 + text.length * 62;
+    if (!synth || U.sfx.muted || !voices.length) return setTimeout(done, est);
+    try {
+      synth.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/…/g, '... '));
+      const vc = pickVoice(v.female, v.idx || 0); if (vc) u.voice = vc;
+      u.pitch = v.pitch || 1; u.rate = v.rate || 1; u.volume = 1;
+      let fin = false; const f = () => { if (!fin) { fin = true; done() } };
+      u.onend = f; u.onerror = f; setTimeout(f, est * 1.8 + 2000);
+      synth.speak(u);
+    } catch (e) { setTimeout(done, est) }
+  });
+}
+function drawSubs(){
+  let el = $('#subs');
+  if (!subs) { if (el) el.remove(); return }
+  if (!el) { el = document.createElement('div'); el.id = 'subs'; el.className = 'subs float'; ui.appendChild(el) }
+  el.innerHTML = `<span class="who">${esc(subs.who)}</span>${esc(subs.text)}`;
+}
+const clearSubs = () => { subs = null; drawSubs() };
+const voiceIdx = { marta: 0, carolina: 1, leonor: 2, ana: 3, rui: 0, diogo: 1, tomas: 2 };
+function speakAs(m, text){
+  const c = F.P[m.who];
+  return say(text, c.name, Object.assign({ idx: voiceIdx[m.who] || 0 }, c.voice || {}), on => O && O.talking(on));
+}
+const REACT = {
+  good: ['Thanks. That really helps.', "Okay, that's fair. I'll do that.", 'Thank you for telling me like that.'],
+  mid: ['Hmm… okay. I think I get it.', "Right. I'll try."],
+  bad: ['…Right. Fine.', 'Wow. Okay.', '…Noted.']
+};
+const juniors = [
+  { skin: '#f1c9a5', hair: '#3b2a20', style: 'short', top: '#c9d6e3', h: 1.72 },
+  { skin: '#c68863', hair: '#1b1b1b', style: 'ponytail', female: true, top: '#e8e2d6', h: 1.65 },
+  { skin: '#f5d6bd', hair: '#8a5a2b', style: 'short', top: '#5f8f4f', h: 1.75 }
+];
 
 net.connected(ok => $('#conn').classList.toggle('hidden', ok));
 
@@ -166,7 +233,7 @@ function publish(){
   if (!S.code) return;
   const board = {}, r = ranked();
   r.forEach((p, i) => board[p.id] = { score: p.score, gain: p.gain == null ? null : p.gain, base: (S.bases || {})[p.id] ?? null, rank: i + 1 });
-  net.set(G('state'), { game: 'ff', phase: S.phase, qi: S.qi, n: S.ids.length, ids: S.ids, ord: S.ord || null, endsAt: S.endsAt || 0, dur: S.dur || 0, total: r.length, board });
+  net.set(G('state'), { game: 'ff', phase: S.phase, qi: S.qi, n: S.ids.length, ids: S.ids, ord: S.ord || null, endsAt: S.endsAt || 0, dur: S.dur || 0, total: r.length, board, who: S.qi >= 0 && S.ids[S.qi] ? F.byId(S.ids[S.qi]).who : null });
 }
 function listen(){
   unsubs.forEach(f => f()); unsubs = [];
@@ -182,24 +249,41 @@ function listen(){
   }));
 }
 
-// ---------- flow ----------
+/* ---------- flow ---------- */
 function newGame(){
   const code = Array.from(crypto.getRandomValues(new Uint8Array(4)), b => 'ABCDEFGHJKMNPQRSTUVWXYZ'[b % 23]).join('');
   if (S.code) net.remove('games/' + S.code);
   const last = ls.get('ff_last', []);
   S = { phase: 'lobby', code, ids: F.pick(last), qi: -1, scores: {}, gains: {}, bases: {}, bots: {} };
   ls.set('ff_last', S.ids);
-  players = {}; answers = {}; seen = new Set(); finalBuilt = false;
+  players = {}; answers = {}; seen = new Set(); finalBuilt = false; seq++;
+  if (O) { O.leaveAll(true); O.lobbyView() }
   saveS(); listen(); publish(); render();
 }
 function addBots(){ BOTS.forEach(n => S.bots['bot_' + n] = { name: n + ' (test)', at: Date.now() }); U.sfx.pop(); saveS(); publish(); render() }
-function startQ(qi){
-  const m = F.byId(S.ids[qi]);
-  S.phase = 'q'; S.qi = qi; S.gains = {}; S.bases = {};
+async function enterOffice(){
+  const my = ++seq;
+  S.phase = 'entry'; saveS(); publish(); render(); U.sfx.whoosh();
+  const line = 'Good morning! Welcome to Tejo and Partners. Your team is waiting for you inside.';
+  if (O) await O.entry(async r => { await say(line, 'Reception', { female: true, pitch: 1.05, idx: 4 }, on => { r.st.talking = on }) });
+  else await say(line, 'Reception', { female: true });
+  if (my !== seq) return;
+  clearSubs(); startQ(0);
+}
+async function startQ(qi){
+  const my = ++seq, m = F.byId(S.ids[qi]), c = F.P[m.who];
+  S.phase = 'intro'; S.qi = qi; S.gains = {}; S.bases = {}; S.tier = null;
+  saveS(); publish(); render();
+  if (O) await O.approach(c.look, qi, { extras: m.extras ? juniors : [] });
+  if (my !== seq) return;
+  await speakAs(m, m.line);
+  if (my !== seq) return;
+  await sleep(400);
+  S.phase = 'q';
   S.ord = m.type === 'mc' ? shuffle([0,1,2,3]) : m.blanks.map(b => shuffle(b.opts.map((_, i) => i)));
   S.dur = durFor(m); S.endsAt = net.now() + S.dur;
   answers = {}; lastTick = null;
-  saveS(); listen(); publish(); U.sfx.whoosh(); render(); botsAnswer();
+  saveS(); listen(); publish(); U.sfx.soft(); render(); botsAnswer();
 }
 function botsAnswer(){
   const m = F.byId(S.ids[S.qi]), q = S.qi;
@@ -214,6 +298,12 @@ function maybeEnd(){
   if (S.phase !== 'q') return;
   const n = Object.keys(roster()).length, got = Object.keys(allAnswers()).filter(id => roster()[id]).length;
   if (n > 0 && got >= n) setTimeout(() => { if (S.phase === 'q') reveal() }, 700);
+}
+function roomTier(m){
+  if (!S.answeredN) return 'mid';
+  if (m.type === 'mc') { let best = 0; S.dist.forEach((c, i) => { if (c > S.dist[best]) best = i }); const p = m.o[best].p; return p === 3 ? 'good' : p === 1 ? 'mid' : 'bad' }
+  const vals = Object.values(S.bases).filter(v => v != null), avg = vals.reduce((a, b) => a + b, 0) / Math.max(1, vals.length);
+  return avg >= 2.5 ? 'good' : avg >= 1.5 ? 'mid' : 'bad';
 }
 function reveal(){
   if (S.phase !== 'q') return;
@@ -230,10 +320,24 @@ function reveal(){
     else (x.a || []).forEach((v, i) => { if (S.dist[i] && S.dist[i][v] != null) S.dist[i][v]++ });
   });
   S.answeredN = Object.keys(A).filter(id => r[id]).length;
+  S.tier = roomTier(m);
   S.phase = 'reveal'; S.botAns = {};
   saveS(); publish(); U.sfx.reveal(); render();
+  if (O) O.react(S.tier);
+  const lines = REACT[S.tier], q = S.qi;
+  setTimeout(() => { if (S.phase === 'reveal' && S.qi === q) speakAs(m, lines[Math.floor(Math.random() * lines.length)]).then(() => { if (S.phase === 'reveal' && S.qi === q) clearSubs() }) }, 900);
 }
-function next(){ if (S.qi + 1 < S.ids.length) startQ(S.qi + 1); else { S.phase = 'final'; finalBuilt = false; saveS(); publish(); render() } }
+async function next(){
+  clearSubs(); if (synth) synth.cancel();
+  if (O) O.leaveAll();
+  if (S.qi + 1 < S.ids.length) return startQ(S.qi + 1);
+  const my = ++seq;
+  S.phase = 'final'; finalBuilt = false; saveS(); publish(); bar();
+  ui.innerHTML = '';
+  if (O) await O.finalView();
+  if (my !== seq) return;
+  render();
+}
 
 setInterval(() => {
   if (S.phase !== 'q') return;
@@ -243,98 +347,102 @@ setInterval(() => {
   if (ms <= 0) reveal();
 }, 250);
 
-// ---------- render ----------
+/* ---------- render ---------- */
 function bar(){
   const snd = `<button class="snd" id="snd" aria-label="Sound on or off">${U.speakerSVG(U.sfx.muted)}</button>`;
   const r = $('#barR');
-  if (S.phase === 'setup') r.innerHTML = snd;
+  if (S.phase === 'setup') r.innerHTML = `<span>Tejo &amp; Partners · Lisbon</span>${snd}`;
   else if (S.phase === 'lobby') r.innerHTML = `<span>Game code</span><span class="codepill">${esc(S.code)}</span>${snd}`;
   else if (S.phase === 'final') r.innerHTML = `<span>Final results</span>${snd}`;
+  else if (S.phase === 'entry') r.innerHTML = `<span>Arriving at the office</span><span class="codepill">${esc(S.code)}</span>${snd}`;
   else r.innerHTML = `<span>Moment ${S.qi + 1} of ${S.ids.length}</span><span class="codepill">${esc(S.code)}</span>${snd}`;
-  $('#snd').onclick = () => { $('#snd').innerHTML = U.speakerSVG(U.sfx.toggle()) };
+  $('#snd').onclick = () => { const m = U.sfx.toggle(); $('#snd').innerHTML = U.speakerSVG(m); amb.setMuted(m); if (m && synth) synth.cancel() };
 }
 function render(){
   bar();
   if (S.phase === 'setup') return renderSetup();
   if (S.phase === 'lobby') return renderLobby();
+  if (S.phase === 'entry') { ui.innerHTML = ''; drawSubs(); return }
+  if (S.phase === 'intro') return renderIntro();
   if (S.phase === 'q' || S.phase === 'reveal') return renderQ();
   if (S.phase === 'final') return renderFinal();
 }
 function renderSetup(){
+  if (O) O.setupView();
   const p = ls.get('ff_pace', 'normal');
-  ui.innerHTML = `<div class="setup">
-    <div><span class="lbl">Nova SBE · Communication · Feedback</span>
+  ui.innerHTML = `<div class="setup float"><span class="lbl">Nova SBE · Communication · Feedback</span>
       <h1>Feedback<br><em>Face-Off</em></h1>
-      <p>Five moments at work. Five colleagues with different personalities. The room answers on their phones, and the best feedback wins.</p>
-      <div class="opts-row"><div class="seg" id="pace"><button data-p="normal" class="${p === 'normal' ? 'on' : ''}">Normal pace</button><button data-p="relaxed" class="${p === 'relaxed' ? 'on' : ''}">Relaxed pace</button></div></div>
-      <button class="btn lime" id="open">Open the lobby</button>
-    </div>
-    <div class="how">
-      <div><span class="n">1</span><span><b>Scan to join</b><span>No app, no account. Pick a name and you're in.</span></span></div>
-      <div><span class="n">2</span><span><b>Read the person</b><span>Each moment has a colleague, a situation and a question.</span></span></div>
-      <div><span class="n">3</span><span><b>Tap your answer</b><span>Best answer and speed earn points. Sentence builders score per word.</span></span></div>
-      <div><span class="n">4</span><span><b>Podium</b><span>Top three take the stage at the end.</span></span></div>
-    </div></div>`;
+      <p>Walk into the Lisbon office of Tejo &amp; Partners. Colleagues come up to you, each with their own personality. The room answers on their phones, and the best feedback wins.</p>
+      <div class="how"><div><b>1 · Scan to join</b>No app, no account</div><div><b>2 · Listen</b>A colleague walks up and talks to you</div><div><b>3 · Answer</b>Best answer + speed = points</div><div><b>4 · Watch them react</b>Then the podium</div></div>
+      <div class="row"><button class="btn lime" id="open">Open the lobby</button><div class="seg" id="pace"><button data-p="normal" class="${p === 'normal' ? 'on' : ''}">Normal pace</button><button data-p="relaxed" class="${p === 'relaxed' ? 'on' : ''}">Relaxed pace</button></div></div>
+    </div>`;
   $('#pace').onclick = e => { const b = e.target.closest('button'); if (b) { ls.set('ff_pace', b.dataset.p); renderSetup() } };
-  $('#open').onclick = () => { U.sfx.unlock(); newGame() };
+  $('#open').onclick = () => { U.sfx.unlock(); amb.start(); amb.setMuted(U.sfx.muted); newGame() };
 }
 function renderLobby(){
+  if (O) O.lobbyView();
   ui.innerHTML = `<div class="lobby">
-    <div class="joinbox"><span class="lbl">Join the game</span>
+    <div class="joinbox float"><span class="lbl">Join the game</span>
       <h1>Scan to play</h1>
       <p>Open your camera, scan, pick a name.</p>
       <div class="qrw"><div class="qr" id="qr"></div>
         <div><span class="lbl">Game code</span><div class="code">${esc(S.code)}</div><div class="url">${esc(joinUrl().replace(/^https?:\/\//, '').replace(/#.*$/, ''))}</div></div></div>
     </div>
-    <div class="crowd"><div id="crowd"></div>
-      <div class="lfoot"><button class="link" id="bots">Add 5 test players</button><button class="btn lime" id="go">Start the game</button></div></div>
+    <div class="crowd float"><div id="crowd" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
+      <div class="lfoot"><button class="link" id="bots">Add 5 test players</button><button class="btn lime" id="go">Enter the office</button></div></div>
   </div>`;
   try { new QRCode($('#qr'), { text: joinUrl(), width: 380, height: 380, colorDark: '#101418', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }) } catch (e) { $('#qr').textContent = 'QR unavailable' }
   $('#bots').onclick = addBots;
-  $('#go').onclick = () => { U.sfx.unlock(); startQ(0) };
+  $('#go').onclick = () => { U.sfx.unlock(); amb.start(); enterOffice() };
   drawLobbyCrowd();
 }
 let shownNames = new Set();
 function drawLobbyCrowd(){
   const el = $('#crowd'); if (!el || S.phase !== 'lobby') return;
   const r = roster(), ids = Object.keys(r).sort((a, b) => (r[a].at || 0) - (r[b].at || 0)), n = ids.length;
-  el.innerHTML = `<div class="cnt"><div class="num">${n}</div><div><b>${n === 1 ? 'player has joined' : 'players have joined'}</b><span>${n ? 'Waiting for everyone… start when the room is in.' : 'Be the first to scan.'}</span></div></div>
-    <div class="names">${n ? ids.map(id => `<span style="--c:${U.color(id)};${shownNames.has(id) ? 'animation:none' : ''}"><i class="dot" style="--c:${U.color(id)}"></i>${esc(r[id].name)}</span>`).join('') : '<div class="empty"><i></i>Waiting for the first player</div>'}</div>`;
+  el.innerHTML = `<div class="cnt"><div class="num">${n}</div><div><b>${n === 1 ? 'player has joined' : 'players have joined'}</b><span>${n ? 'Start when the room is in.' : 'Be the first to scan.'}</span></div></div>
+    <div class="names">${n ? ids.map(id => `<span style="${shownNames.has(id) ? 'animation:none' : ''}"><i class="dot" style="--c:${U.color(id)}"></i>${esc(r[id].name)}</span>`).join('') : '<div class="empty"><i></i>Waiting for the first player</div>'}</div>`;
   ids.forEach(id => shownNames.add(id));
   const go = $('#go'); if (go) go.disabled = n === 0;
 }
-function personCard(m){
+function nameTag(m){
   const c = F.P[m.who];
-  return `<div class="person"><div class="ph"><div class="av" style="background:${c.col}">${esc(c.name[0])}</div><div><b>${esc(c.name)}</b><small>${esc(c.role)}</small></div></div>
-    <span class="tagp">${esc(c.tag)}</span><p class="desc">${esc(c.desc)}</p><p class="situ">${esc(m.situ)}</p></div>`;
+  return `<div class="ntag float"><div class="av" style="background:${c.col}">${esc(c.name[0])}</div><div><b>${esc(c.name)}</b><small>${esc(c.role)}</small><span class="tagp">${esc(c.tag)}</span><p>${esc(c.desc)}</p></div></div>`;
+}
+function renderIntro(){
+  const m = F.byId(S.ids[S.qi]);
+  ui.innerHTML = nameTag(m) + `<div class="listen float"><i></i>${esc(F.P[m.who].name)} is coming over… listen</div>`;
+  drawSubs();
 }
 function renderQ(){
-  const m = F.byId(S.ids[S.qi]), rev = S.phase === 'reveal';
+  const m = F.byId(S.ids[S.qi]), rev = S.phase === 'reveal', c = F.P[m.who];
+  const tot = Math.max(1, S.answeredN || 0);
   let body = '';
   if (m.type === 'mc') {
-    const tot = Math.max(1, S.answeredN || 0);
     body = `<div class="tiles">${S.ord.map((oi, k) => {
-      const o = m.o[oi], c = rev ? (S.dist[oi] || 0) : 0;
+      const o = m.o[oi], n = rev ? (S.dist[oi] || 0) : 0;
       const cls = rev ? (o.p === 3 ? 'best' : o.p === 1 ? 'part' : 'dim') : '';
-      return `<div class="tile t${k} ${cls}"><span class="L">${L[k]}</span><span>${esc(o.t)}</span>${rev ? `<span class="cnt2">${c}</span><span class="fill" style="width:${c / tot * 100}%"></span>` : ''}</div>`;
+      return `<div class="tile t${k} ${cls}"><span class="L">${L[k]}</span><span>${esc(o.t)}${rev && o.p ? `<span class="bdg">${o.p === 3 ? '✓ Best answer' : 'Partly right'}</span>` : ''}</span>${rev ? `<span class="cnt2">${n}</span><span class="fill" style="width:${n / tot * 100}%"></span>` : ''}</div>`;
     }).join('')}</div>`;
   } else {
-    const tot = Math.max(1, S.answeredN || 0);
     body = `<div class="sent">${m.parts.map((p, i) => esc(p) + (i < m.blanks.length ? `<span class="slot ${rev ? 'ok' : ''}">${esc(rev ? m.blanks[i].opts[m.blanks[i].ok] : m.blanks[i].label)}</span>` : '')).join('')}</div>`
-      + (rev
-        ? `<div class="right">${m.blanks.map((b, i) => `<div><span>${i + 1} · ${esc(b.label)}</span><b>${Math.round((S.dist[i][b.ok] || 0) / tot * 100)}% chose right</b></div>`).join('')}</div>`
-        : `<div class="blanks">${m.blanks.map((b, i) => `<div class="blank"><span class="bl">${i + 1} · ${esc(b.label)}</span><div class="chips">${S.ord[i].map(oi => `<span class="chip">${esc(b.opts[oi])}</span>`).join('')}</div></div>`).join('')}</div>`);
+      + (rev ? `<div class="right">${m.blanks.map((b, i) => `<div><span>${i + 1} · ${esc(b.label)}</span><b>${Math.round((S.dist[i][b.ok] || 0) / tot * 100)}% chose right</b></div>`).join('')}</div>`
+             : `<div class="blanks">${m.blanks.map((b, i) => `<div class="blank"><span class="bl">${i + 1} · ${esc(b.label)}</span><div class="chips">${S.ord[i].map(oi => `<span class="chip">${esc(b.opts[oi])}</span>`).join('')}</div></div>`).join('')}</div>`);
   }
   const top = rev ? ranked().slice(0, 5) : [];
-  ui.innerHTML = `<div class="qwrap ${rev ? 'rv' : ''}">${personCard(m)}
-    <div><div class="qh"><span class="concept">${esc(m.concept)}</span></div>
-      <div style="display:flex;justify-content:space-between;gap:18px;align-items:flex-start"><h2 class="qtext">${esc(m.q)}</h2>
-        ${rev ? '' : `<div class="timer"><div class="ring" id="ring"><span></span></div></div>`}</div>
+  const moodTxt = { good: `The room mostly got it right, and ${c.name} relaxes.`, mid: `The room was half right. ${c.name} isn't convinced.`, bad: `Most of the room got it wrong. ${c.name} shuts down.` }[S.tier] || '';
+  const moodCol = { good: 'var(--good)', mid: 'var(--mid)', bad: 'var(--bad)' }[S.tier];
+  ui.innerHTML = nameTag(m) + `<div class="qpanel float">
+      <span class="concept">${esc(m.concept)}</span>
+      <div class="qh"><h2 class="qtext">${esc(m.q)}</h2>${rev ? '' : `<div class="ring" id="ring"><span></span></div>`}</div>
+      <p class="ctxl">${esc(m.situ)}</p>
       ${body}
       ${rev ? `<div class="explain"><b>Why:</b> ${esc(m.why)}</div>
-        <div class="top5">${top.map((p, i) => `<div style="animation-delay:${.15 * i}s"><span class="rk">${i + 1}</span>${esc(p.name)} <span class="g">${p.gain ? '+' + U.fmt(p.gain) : ''}</span></div>`).join('')}</div>` : ''}
-      <div class="qfoot">${rev ? `<button class="btn lime" id="nx">${S.qi + 1 < S.ids.length ? 'Next moment' : 'Show the podium'}</button>` : `<span class="answered" id="ans"></span><button class="btn ghost" id="skip">End now</button>`}</div>
-    </div></div>`;
+        <div class="mood" style="--c:${moodCol}"><i></i>${esc(moodTxt)}</div>
+        <div class="top5">${top.map((p, i) => `<div style="animation-delay:${.12 * i}s"><span class="rk">${i + 1}</span>${esc(p.name)} <span class="g">${p.gain ? '+' + U.fmt(p.gain) : ''}</span></div>`).join('')}</div>` : ''}
+      <div class="qfoot">${rev ? `<span></span><button class="btn lime" id="nx">${S.qi + 1 < S.ids.length ? 'Next colleague' : 'Show the podium'}</button>` : `<span class="answered" id="ans"></span><button class="btn ghost" id="skip">End now</button>`}</div>
+    </div>`;
+  drawSubs();
   if (rev) $('#nx').onclick = next; else { $('#skip').onclick = reveal; drawAnswered() }
 }
 function drawAnswered(){
@@ -343,11 +451,12 @@ function drawAnswered(){
   el.innerHTML = `<b>${got}</b> / ${n} answered`;
 }
 function renderFinal(){
+  clearSubs();
   const r = ranked();
   if (finalBuilt) return; finalBuilt = true;
-  if (!r.length) { ui.innerHTML = `<div class="final"><h2>No players this time</h2><div class="fbtn"><button class="btn lime" id="again">New game</button></div></div>`; $('#again').onclick = () => { S = { phase: 'setup', code: S.code }; newGame() }; return }
+  if (!r.length) { ui.innerHTML = `<div class="final float"><h2>No players this time</h2><div class="fbtn"><button class="btn lime" id="again">New game</button></div></div>`; $('#again').onclick = () => newGame(); return }
   const slot = (p, cls, md) => p ? `<div class="ps ${cls}"><div class="av" style="background:${U.color(p.id)}">${esc(initials(p.name))}</div><div class="nm">${esc(p.name)}</div><div class="blk"><div class="md">${md}</div><div class="sc" data-to="${p.score}">0 pts</div></div></div>` : '<div></div>';
-  ui.innerHTML = `<div class="final"><span class="lbl">Final results · ${r.length} players</span>
+  ui.innerHTML = `<div class="final float"><span class="lbl">Final results · ${r.length} players</span>
     <h2 id="fh">And the best feedback giver is…</h2>
     <div class="pod">${slot(r[1], 'p2', '2nd')}${slot(r[0], 'p1', '1st')}${slot(r[2], 'p3', '3rd')}</div>
     <div class="board" id="board">${r.slice(3, 23).map((p, i) => `<div><span class="rk">${i + 4}</span><i class="dot" style="--c:${U.color(p.id)}"></i><span class="nm2">${esc(p.name)}</span><span class="s">${U.fmt(p.score)}</span></div>`).join('')}</div>
@@ -363,8 +472,16 @@ function renderFinal(){
   setTimeout(() => { const b = $('#board'); if (b) b.classList.add('in') }, 5900);
 }
 
-listen(); if (S.phase === 'final') finalBuilt = false; render();
+/* ---------- resume after a refresh ---------- */
+listen();
+if (S.phase === 'entry') { render(); enterOffice() }
+else if (S.phase === 'intro') startQ(S.qi);
+else {
+  if ((S.phase === 'q' || S.phase === 'reveal') && O) { const m = F.byId(S.ids[S.qi]); O.approach(F.P[m.who].look, S.qi, { instant: true, extras: m.extras ? juniors : [] }).then(() => { if (S.phase === 'reveal') O.react(S.tier) }) }
+  if (S.phase === 'final' && O) O.finalView();
+  render();
 }
+window.__ff = { get S(){ return S }, O };
 </script>
 </body>
 </html>

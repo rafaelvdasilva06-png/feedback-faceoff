@@ -118,8 +118,10 @@ function render(){
   if (!code) return renderCode();
   if (status === 'nogame') return renderMsg('Game not found', `No game with code ${esc(code)} is running. Check the code on the screen.`, true);
   if (!St) return renderMsg('Connecting…', '');
-  if (!joined) return St.phase === 'lobby' || St.phase === 'q' || St.phase === 'reveal' ? renderJoin() : renderMsg('This game has ended', 'Wait for the host to start a new one.', true);
+  if (!joined) return ['lobby','entry','intro','q','reveal'].includes(St.phase) ? renderJoin() : renderMsg('This game has ended', 'Wait for the host to start a new one.', true);
   if (St.phase === 'lobby') return renderMsg(`You're in!`, `<div class="big">${St.total || 1}</div><p class="muted" style="margin:6px 0 0">${(St.total || 1) === 1 ? 'player' : 'players'} in the lobby. Look at the big screen, the game starts soon.</p>`);
+  if (St.phase === 'entry') return renderMsg('Entering the office', 'Welcome to Tejo &amp; Partners, Lisbon. Look at the big screen.');
+  if (St.phase === 'intro') { const c = St.who && F.P[St.who]; return renderMsg(c ? `${c.name} is coming over` : 'Someone is coming over', 'Listen to what they say on the big screen. Your answer options appear here next.') }
   if (St.phase === 'q') return sent[St.qi] != null ? renderLocked() : renderQ();
   if (St.phase === 'reveal') return renderReveal();
   if (St.phase === 'final') return renderFinal();
