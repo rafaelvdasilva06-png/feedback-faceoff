@@ -1,0 +1,35 @@
+/*
+VOICE: a live room game on a projector: clear, readable from the back row, calm and professional
+IDEA: a workplace "feedback desk": colleague cards come up, the room answers on phones
+PICTURE: big colleague card + answer tiles on the projector; a podium at the end
+COLOUR and TYPE: white, ink #101418, slate, warm yellow #ffd84a for scores; answer tiles orange/blue/green/rose; Manrope
+LAYOUT: projector = full-screen stage; phones = one calm column with big tap targets
+*/
+:root{--bg:#ffffff;--ink:#101418;--soft:#5b6672;--body:#3a4450;--card:#f5f6f8;--card2:#ffffff;--line:#e2e5ea;--lime:#ffd84a;--orange:#e8833a;--blue:#3d6fb5;--green:#2e8b57;--pink:#c2456a;--good:#1d7a4c;--goodbg:#e8f5ee;--mid:#8a6a00;--midbg:#fff8dc;--bad:#b42318}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.45 Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--bg)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.lbl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.hidden{display:none!important}
+.btn{border:0;border-radius:14px;padding:14px 26px;font-weight:800;min-height:52px;font-size:17px;transition:transform .08s,filter .15s}
+.btn:active{transform:translateY(1px)}
+.btn.lime{background:var(--ink);color:#fff}
+.btn.lime:hover{filter:brightness(1.25)}
+.btn.lime:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--soft)}
+.mark{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.mark i{width:28px;height:28px;border-radius:7px;background:var(--ink);display:grid;place-items:center}
+.mark i::after{content:"";width:10px;height:10px;border-radius:2px;background:var(--lime)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c,#999);flex:none}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#101418;flex:none}
+.tagp{display:inline-block;background:var(--ink);border:0;color:#fff;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px}
+.concept{display:inline-block;background:var(--lime);color:#101418;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px}
+/* answer tile colours */
+.t0{--t:var(--orange)}.t1{--t:var(--blue)}.t2{--t:var(--green)}.t3{--t:var(--pink)}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

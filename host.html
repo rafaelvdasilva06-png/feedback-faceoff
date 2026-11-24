@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Feedback Face-Off · Host</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+html,body{height:100%;overflow:hidden}
+.stage{position:fixed;inset:0;display:flex;flex-direction:column;padding:clamp(16px,2.2vw,36px) clamp(20px,3vw,56px)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:44px}
+.bar .r{display:flex;gap:14px;align-items:center;color:var(--soft);font-weight:600}
+.codepill{background:var(--lime);border:0;border-radius:10px;padding:6px 12px;font-weight:800;letter-spacing:.12em;color:var(--ink)}
+.snd{background:none;border:1px solid var(--line);border-radius:10px;width:40px;height:40px;display:grid;place-items:center;color:var(--soft)}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:safe center;overflow-y:auto;padding-top:8px}
+.rv .qtext{font-size:clamp(24px,2.2vw,36px);margin-bottom:14px}.rv .tile{padding:12px 16px;font-size:clamp(15px,1.15vw,19px)}.rv .sent{font-size:clamp(17px,1.5vw,24px);line-height:1.85;padding:12px 18px;margin-bottom:10px}.rv .right div{padding:8px 16px}.rv .explain{margin-top:12px;padding:12px 18px}.rv .qfoot{margin-top:10px}
+.rv .situ{font-size:clamp(16px,1.3vw,21px)}
+.right{display:grid;gap:8px;margin-top:4px}.right div{display:flex;justify-content:space-between;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:clamp(15px,1.2vw,19px);font-weight:600}.right b{color:var(--good);white-space:nowrap}
+/* setup */
+.setup{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:56px;align-items:center}
+.setup h1{font-size:clamp(44px,5.4vw,84px);line-height:1;letter-spacing:-.04em;margin:14px 0 18px}
+.setup h1 em{font-style:normal;background:var(--lime);padding:0 .12em;border-radius:10px}
+.setup p{font-size:clamp(17px,1.4vw,21px);color:var(--body);margin:0 0 26px;max-width:40ch}
+.how{display:grid;gap:12px}
+.how div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;align-items:center}
+.how b{display:block;font-size:17px}.how span{color:var(--soft);font-size:15px}
+.how .n{width:44px;height:44px;border-radius:12px;background:var(--lime);display:grid;place-items:center;font-weight:800;color:var(--ink)}
+.opts-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.seg{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{background:none;border:0;padding:8px 14px;border-radius:9px;font-weight:700;color:var(--soft)}
+.seg button.on{background:var(--ink);color:#fff}
+/* lobby */
+.lobby{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(24px,3.5vw,64px);align-items:center;height:100%}
+.joinbox h1{font-size:clamp(40px,4.4vw,72px);line-height:1;letter-spacing:-.04em;margin:8px 0 10px}
+.joinbox p{font-size:clamp(17px,1.4vw,22px);color:var(--body);margin:0 0 22px}
+.qrw{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.qr{background:#fff;padding:14px;border-radius:22px;border:1px solid var(--line);box-shadow:0 12px 40px #10141814}
+.qr img,.qr canvas{display:block;width:min(30vh,300px)!important;height:min(30vh,300px)!important}
+.code{font-size:clamp(48px,5vw,84px);font-weight:800;letter-spacing:.1em;color:var(--ink);line-height:1;background:var(--lime);display:inline-block;padding:6px 16px;border-radius:14px}
+.qrw .lbl{display:block;margin-bottom:8px}
+.url{font-size:clamp(15px,1.2vw,19px);color:var(--body);margin-top:10px;word-break:break-all}
+.crowd{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:clamp(20px,2.4vw,34px);height:min(72vh,720px);display:flex;flex-direction:column}
+.cnt{display:flex;align-items:center;gap:22px;margin-bottom:18px}
+.cnt .num{font-size:clamp(64px,7vw,112px);font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--ink);background:var(--lime);padding:10px 26px;border-radius:18px;font-variant-numeric:tabular-nums}
+.cnt b{display:block;font-size:clamp(20px,1.8vw,28px)}
+.cnt span{color:var(--soft)}
+.names{flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.names span{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 12px;font-size:clamp(16px,1.3vw,20px);font-weight:700;animation:pop .45s ease-out both}
+.empty{color:var(--soft);font-size:20px;margin:auto;text-align:center}
+.empty i{display:block;width:12px;height:12px;border-radius:50%;background:var(--ink);margin:0 auto 14px;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.8);opacity:.3}}
+.lfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
+.link{background:none;border:0;color:var(--soft);text-decoration:underline;font-size:15px;padding:8px 0}
+/* question */
+.qwrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:clamp(20px,2.6vw,44px);align-items:start}
+.person{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:clamp(18px,2vw,28px)}
+.ph{display:flex;gap:16px;align-items:center;margin-bottom:14px}
+.ph .av{width:clamp(56px,5vw,76px);height:clamp(56px,5vw,76px);font-size:clamp(24px,2.2vw,32px)}
+.ph b{display:block;font-size:clamp(22px,2vw,30px);letter-spacing:-.02em}
+.ph small{color:var(--soft);font-size:clamp(14px,1.1vw,17px)}
+.person .desc{color:var(--body);font-size:clamp(15px,1.15vw,18px);margin:10px 0 0}
+.situ{font-size:clamp(19px,1.6vw,26px);line-height:1.4;font-weight:600;margin:18px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+.qh{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.qtext{font-size:clamp(28px,2.7vw,46px);line-height:1.12;letter-spacing:-.025em;font-weight:800;margin:0 0 20px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tile{position:relative;background:var(--card);border:2px solid var(--line);border-left:10px solid var(--t);border-radius:18px;padding:16px 18px 16px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;font-size:clamp(16px,1.35vw,22px);line-height:1.35;font-weight:600;overflow:hidden}
+.tile .L{width:clamp(30px,2.4vw,40px);height:clamp(30px,2.4vw,40px);border-radius:10px;background:var(--t);color:#fff;display:grid;place-items:center;font-weight:800}
+.tile .fill{position:absolute;left:0;bottom:0;height:6px;background:var(--t);transition:width 1s ease}
+.tile .cnt2{position:absolute;right:14px;top:10px;font-weight:800;font-size:clamp(16px,1.3vw,22px);color:var(--t)}
+.tile.best{border-color:var(--good);border-left-color:var(--good);background:var(--goodbg);box-shadow:0 0 0 3px #1d7a4c33}
+.tile.best::after{content:"✓ Best";position:absolute;right:14px;bottom:12px;font-size:14px;font-weight:800;color:var(--good)}
+.tile.part::after{content:"Partly right";position:absolute;right:14px;bottom:12px;font-size:13px;font-weight:800;color:var(--mid)}
+.tile.dim{opacity:.45}
+.sent{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 22px;font-size:clamp(20px,1.8vw,30px);line-height:2;font-weight:600;margin-bottom:14px}
+.slot{display:inline-block;border-bottom:3px dashed var(--soft);padding:0 8px;line-height:1.4;color:var(--soft);font-weight:700}
+.slot.ok{border-bottom-style:solid;border-color:var(--good);color:var(--good)}
+.blanks{display:grid;gap:10px}
+.blank{display:grid;grid-template-columns:clamp(110px,9vw,150px) minmax(0,1fr);gap:12px;align-items:center}
+.blank .bl{font-weight:800;color:var(--soft);font-size:clamp(14px,1.1vw,17px)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--card2);border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;font-size:clamp(14px,1.15vw,18px);font-weight:600}
+.chip.ok{border-color:var(--good);background:var(--goodbg);color:var(--good)}
+.chip .pc{color:var(--soft);font-weight:800;margin-left:8px}
+.timer{display:flex;align-items:center;gap:12px}
+.ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:24px;font-variant-numeric:tabular-nums}
+.ring span{width:52px;height:52px;border-radius:50%;background:var(--bg);display:grid;place-items:center}
+.answered{font-size:18px;font-weight:700}
+.answered b{color:var(--ink);font-size:26px}
+.explain{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 20px;font-size:clamp(16px,1.3vw,21px);line-height:1.45;animation:rise .5s ease-out both}
+.explain b{color:var(--ink)}
+.top5{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.top5 div{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 8px;font-weight:700;animation:rise .5s ease-out both}
+.top5 .rk{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800}
+.top5 .g{color:var(--good);font-weight:800}
+.qfoot{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
+/* final */
+.final{max-width:1100px;margin:0 auto;text-align:center;width:100%}
+.final h2{font-size:clamp(34px,3.6vw,58px);letter-spacing:-.03em;margin:10px 0 0;min-height:1.1em}
+.pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:end;margin:30px auto 8px;max-width:900px}
+.ps{opacity:0;transform:translateY(50px) scale(.95);transition:opacity .7s,transform .8s cubic-bezier(.2,.9,.3,1.25);display:flex;flex-direction:column;align-items:center}
+.ps.in{opacity:1;transform:none}
+.ps .av{width:clamp(64px,6vw,96px);height:clamp(64px,6vw,96px);font-size:clamp(26px,2.6vw,40px);margin-bottom:12px;box-shadow:0 8px 24px #10141822}
+.ps .nm{font-size:clamp(20px,1.9vw,30px);font-weight:800;margin-bottom:10px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.blk{width:100%;background:var(--card);border:1px solid var(--line);border-radius:22px 22px 8px 8px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.blk .md{font-size:clamp(34px,3.4vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.blk .sc{color:var(--soft);font-size:clamp(16px,1.3vw,20px);font-variant-numeric:tabular-nums;margin-top:6px}
+.p1 .blk{min-height:clamp(170px,22vh,250px);background:var(--lime);border-color:var(--lime);box-shadow:0 14px 40px #ffd84a55}.p1 .md{color:var(--ink)}.p1 .sc{color:var(--ink)}
+.p2 .blk{min-height:clamp(130px,16vh,190px)}.p2 .md{color:var(--soft)}
+.p3 .blk{min-height:clamp(100px,12vh,150px)}.p3 .md{color:#b06a2c}
+.board{opacity:0;transition:opacity .8s;margin:18px auto 0;max-width:900px;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;text-align:left}
+.board.in{opacity:1}
+.board div{display:grid;grid-template-columns:30px 12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;border-radius:12px;background:var(--card)}
+.board .rk{color:var(--soft);font-weight:800}.board .nm2{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.board .s{font-weight:800;font-variant-numeric:tabular-nums}
+.fbtn{margin-top:22px;display:flex;gap:12px;justify-content:center}
+.conn{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:var(--bad);color:#fff;font-weight:800;padding:8px 14px;border-radius:10px;z-index:5}
+@media (max-width:900px){html,body{overflow:auto}.stage{position:static;min-height:100%}.setup,.lobby,.qwrap{grid-template-columns:minmax(0,1fr)}.tiles{grid-template-columns:minmax(0,1fr)}.crowd{height:auto;min-height:300px}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bar">
+    <span class="mark"><i></i>Feedback Face-Off</span>
+    <div class="r" id="barR"></div>
+  </div>
+  <div class="main" id="ui"></div>
+</div>
+<div class="conn hidden" id="conn">Reconnecting to the live server…</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script src="content.js"></script>
+<script>
+{
+const $ = s => document.querySelector(s), esc = U.esc, ls = U.ls, F = window.FF;
+const net = U.net(), ui = $('#ui');
+const L = ['A','B','C','D'];
+const BOTS = ['Inês','Tomás','Beatriz','Miguel','Sofia'];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const initials = n => String(n).trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+const pace = ls.get('ff_pace', 'normal');
+let S = ls.get('ff_host', null) || { phase: 'setup' };
+let players = {}, answers = {}, unsubs = [], tickT = null, finalBuilt = false, seen = new Set(), lastTick = null;
+const saveS = () => ls.set('ff_host', S);
+const G = p => `games/${S.code}/${p}`;
+const durFor = m => (m.type === 'fill' ? 45 : 30) * 1000 * (ls.get('ff_pace', 'normal') === 'relaxed' ? 1.5 : 1);
+const joinUrl = () => location.href.replace(/host\.html.*$/, '').replace(/[?#].*$/, '') + '#' + S.code;
+
+net.connected(ok => $('#conn').classList.toggle('hidden', ok));
+
+function roster(){
+  const o = {};
+  Object.entries(players || {}).forEach(([id, p]) => { if (p && p.name) o[id] = { name: String(p.name).slice(0, 18), at: p.at || 0 } });
+  Object.entries(S.bots || {}).forEach(([id, b]) => o[id] = b);
+  return o;
+}
+function ranked(){
+  const r = roster();
+  return Object.keys(r).map(id => ({ id, name: r[id].name, score: (S.scores || {})[id] || 0, gain: (S.gains || {})[id] })).sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+}
+function publish(){
+  if (!S.code) return;
+  const board = {}, r = ranked();
+  r.forEach((p, i) => board[p.id] = { score: p.score, gain: p.gain == null ? null : p.gain, base: (S.bases || {})[p.id] ?? null, rank: i + 1 });
+  net.set(G('state'), { game: 'ff', phase: S.phase, qi: S.qi, n: S.ids.length, ids: S.ids, ord: S.ord || null, endsAt: S.endsAt || 0, dur: S.dur || 0, total: r.length, board });
+}
+function listen(){
+  unsubs.forEach(f => f()); unsubs = [];
+  if (!S.code) return;
+  unsubs.push(net.on(G('players'), v => {
+    players = v || {};
+    Object.keys(players).forEach(id => { if (!seen.has(id)) { seen.add(id); if (S.phase === 'lobby') U.sfx.pop() } });
+    if (S.phase === 'lobby') { publish(); drawLobbyCrowd() } else if (S.phase === 'q') { drawAnswered(); maybeEnd() }
+  }));
+  if (S.phase === 'q' || S.phase === 'reveal') unsubs.push(net.on(G('answers/' + S.qi), v => {
+    answers = v || {};
+    if (S.phase === 'q') { drawAnswered(); maybeEnd() }
+  }));
+}
+
+// ---------- flow ----------
+function newGame(){
+  const code = Array.from(crypto.getRandomValues(new Uint8Array(4)), b => 'ABCDEFGHJKMNPQRSTUVWXYZ'[b % 23]).join('');
+  if (S.code) net.remove('games/' + S.code);
+  const last = ls.get('ff_last', []);
+  S = { phase: 'lobby', code, ids: F.pick(last), qi: -1, scores: {}, gains: {}, bases: {}, bots: {} };
+  ls.set('ff_last', S.ids);
+  players = {}; answers = {}; seen = new Set(); finalBuilt = false;
+  saveS(); listen(); publish(); render();
+}
+function addBots(){ BOTS.forEach(n => S.bots['bot_' + n] = { name: n + ' (test)', at: Date.now() }); U.sfx.pop(); saveS(); publish(); render() }
+function startQ(qi){
+  const m = F.byId(S.ids[qi]);
+  S.phase = 'q'; S.qi = qi; S.gains = {}; S.bases = {};
+  S.ord = m.type === 'mc' ? shuffle([0,1,2,3]) : m.blanks.map(b => shuffle(b.opts.map((_, i) => i)));
+  S.dur = durFor(m); S.endsAt = net.now() + S.dur;
+  answers = {}; lastTick = null;
+  saveS(); listen(); publish(); U.sfx.whoosh(); render(); botsAnswer();
+}
+function botsAnswer(){
+  const m = F.byId(S.ids[S.qi]), q = S.qi;
+  Object.keys(S.bots || {}).forEach(id => setTimeout(() => {
+    if (S.phase !== 'q' || S.qi !== q) return;
+    const a = m.type === 'mc' ? (Math.random() < .55 ? m.o.findIndex(o => o.p === 3) : Math.floor(Math.random() * 4)) : m.blanks.map(b => Math.random() < .6 ? b.ok : Math.floor(Math.random() * b.opts.length));
+    S.botAns = S.botAns || {}; S.botAns[id] = { a, t: net.now() }; drawAnswered(); maybeEnd();
+  }, 2000 + Math.random() * S.dur * .5));
+}
+function allAnswers(){ return Object.assign({}, answers || {}, S.botAns || {}) }
+function maybeEnd(){
+  if (S.phase !== 'q') return;
+  const n = Object.keys(roster()).length, got = Object.keys(allAnswers()).filter(id => roster()[id]).length;
+  if (n > 0 && got >= n) setTimeout(() => { if (S.phase === 'q') reveal() }, 700);
+}
+function reveal(){
+  if (S.phase !== 'q') return;
+  const m = F.byId(S.ids[S.qi]), A = allAnswers(), r = roster();
+  S.gains = {}; S.bases = {}; S.dist = m.type === 'mc' ? [0,0,0,0] : m.blanks.map(b => b.opts.map(() => 0));
+  Object.keys(r).forEach(id => {
+    const x = A[id];
+    if (!x) { S.gains[id] = 0; S.bases[id] = null; return }
+    const b = F.base(m, x.a);
+    const frac = Math.max(0, Math.min(1, (S.endsAt - (x.t || S.endsAt)) / S.dur));
+    const pts = b > 0 ? Math.round(b * 100 * (1 + .5 * frac)) : 0;
+    S.scores[id] = (S.scores[id] || 0) + pts; S.gains[id] = pts; S.bases[id] = b;
+    if (m.type === 'mc') { if (S.dist[x.a] != null) S.dist[x.a]++ }
+    else (x.a || []).forEach((v, i) => { if (S.dist[i] && S.dist[i][v] != null) S.dist[i][v]++ });
+  });
+  S.answeredN = Object.keys(A).filter(id => r[id]).length;
+  S.phase = 'reveal'; S.botAns = {};
+  saveS(); publish(); U.sfx.reveal(); render();
+}
+function next(){ if (S.qi + 1 < S.ids.length) startQ(S.qi + 1); else { S.phase = 'final'; finalBuilt = false; saveS(); publish(); render() } }
+
+setInterval(() => {
+  if (S.phase !== 'q') return;
+  const ms = S.endsAt - net.now(), sec = Math.max(0, Math.ceil(ms / 1000)), el = $('#ring');
+  if (el) { el.style.background = `conic-gradient(${sec <= 5 ? 'var(--bad)' : 'var(--ink)'} ${Math.max(0, ms / S.dur) * 360}deg, var(--line) 0)`; el.querySelector('span').textContent = sec }
+  if (sec <= 5 && sec > 0 && sec !== lastTick) { lastTick = sec; U.sfx.tick(sec <= 1) }
+  if (ms <= 0) reveal();
+}, 250);
+
+// ---------- render ----------
+function bar(){
+  const snd = `<button class="snd" id="snd" aria-label="Sound on or off">${U.speakerSVG(U.sfx.muted)}</button>`;
+  const r = $('#barR');
+  if (S.phase === 'setup') r.innerHTML = snd;
+  else if (S.phase === 'lobby') r.innerHTML = `<span>Game code</span><span class="codepill">${esc(S.code)}</span>${snd}`;
+  else if (S.phase === 'final') r.innerHTML = `<span>Final results</span>${snd}`;
+  else r.innerHTML = `<span>Moment ${S.qi + 1} of ${S.ids.length}</span><span class="codepill">${esc(S.code)}</span>${snd}`;
+  $('#snd').onclick = () => { $('#snd').innerHTML = U.speakerSVG(U.sfx.toggle()) };
+}
+function render(){
+  bar();
+  if (S.phase === 'setup') return renderSetup();
+  if (S.phase === 'lobby') return renderLobby();
+  if (S.phase === 'q' || S.phase === 'reveal') return renderQ();
+  if (S.phase === 'final') return renderFinal();
+}
+function renderSetup(){
+  const p = ls.get('ff_pace', 'normal');
+  ui.innerHTML = `<div class="setup">
+    <div><span class="lbl">Nova SBE · Communication · Feedback</span>
+      <h1>Feedback<br><em>Face-Off</em></h1>
+      <p>Five moments at work. Five colleagues with different personalities. The room answers on their phones, and the best feedback wins.</p>
+      <div class="opts-row"><div class="seg" id="pace"><button data-p="normal" class="${p === 'normal' ? 'on' : ''}">Normal pace</button><button data-p="relaxed" class="${p === 'relaxed' ? 'on' : ''}">Relaxed pace</button></div></div>
+      <button class="btn lime" id="open">Open the lobby</button>
+    </div>
+    <div class="how">
+      <div><span class="n">1</span><span><b>Scan to join</b><span>No app, no account. Pick a name and you're in.</span></span></div>
+      <div><span class="n">2</span><span><b>Read the person</b><span>Each moment has a colleague, a situation and a question.</span></span></div>
+      <div><span class="n">3</span><span><b>Tap your answer</b><span>Best answer and speed earn points. Sentence builders score per word.</span></span></div>
+      <div><span class="n">4</span><span><b>Podium</b><span>Top three take the stage at the end.</span></span></div>
+    </div></div>`;
+  $('#pace').onclick = e => { const b = e.target.closest('button'); if (b) { ls.set('ff_pace', b.dataset.p); renderSetup() } };
+  $('#open').onclick = () => { U.sfx.unlock(); newGame() };
+}
+function renderLobby(){
+  ui.innerHTML = `<div class="lobby">
+    <div class="joinbox"><span class="lbl">Join the game</span>
+      <h1>Scan to play</h1>
+      <p>Open your camera, scan, pick a name.</p>
+      <div class="qrw"><div class="qr" id="qr"></div>
+        <div><span class="lbl">Game code</span><div class="code">${esc(S.code)}</div><div class="url">${esc(joinUrl().replace(/^https?:\/\//, '').replace(/#.*$/, ''))}</div></div></div>
+    </div>
+    <div class="crowd"><div id="crowd"></div>
+      <div class="lfoot"><button class="link" id="bots">Add 5 test players</button><button class="btn lime" id="go">Start the game</button></div></div>
+  </div>`;
+  try { new QRCode($('#qr'), { text: joinUrl(), width: 380, height: 380, colorDark: '#101418', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }) } catch (e) { $('#qr').textContent = 'QR unavailable' }
+  $('#bots').onclick = addBots;
+  $('#go').onclick = () => { U.sfx.unlock(); startQ(0) };
+  drawLobbyCrowd();
+}
+let shownNames = new Set();
+function drawLobbyCrowd(){
+  const el = $('#crowd'); if (!el || S.phase !== 'lobby') return;
+  const r = roster(), ids = Object.keys(r).sort((a, b) => (r[a].at || 0) - (r[b].at || 0)), n = ids.length;
+  el.innerHTML = `<div class="cnt"><div class="num">${n}</div><div><b>${n === 1 ? 'player has joined' : 'players have joined'}</b><span>${n ? 'Waiting for everyone… start when the room is in.' : 'Be the first to scan.'}</span></div></div>
+    <div class="names">${n ? ids.map(id => `<span style="--c:${U.color(id)};${shownNames.has(id) ? 'animation:none' : ''}"><i class="dot" style="--c:${U.color(id)}"></i>${esc(r[id].name)}</span>`).join('') : '<div class="empty"><i></i>Waiting for the first player</div>'}</div>`;
+  ids.forEach(id => shownNames.add(id));
+  const go = $('#go'); if (go) go.disabled = n === 0;
+}
+function personCard(m){
+  const c = F.P[m.who];
+  return `<div class="person"><div class="ph"><div class="av" style="background:${c.col}">${esc(c.name[0])}</div><div><b>${esc(c.name)}</b><small>${esc(c.role)}</small></div></div>
+    <span class="tagp">${esc(c.tag)}</span><p class="desc">${esc(c.desc)}</p><p class="situ">${esc(m.situ)}</p></div>`;
+}
+function renderQ(){
+  const m = F.byId(S.ids[S.qi]), rev = S.phase === 'reveal';
+  let body = '';
+  if (m.type === 'mc') {
+    const tot = Math.max(1, S.answeredN || 0);
+    body = `<div class="tiles">${S.ord.map((oi, k) => {
+      const o = m.o[oi], c = rev ? (S.dist[oi] || 0) : 0;
+      const cls = rev ? (o.p === 3 ? 'best' : o.p === 1 ? 'part' : 'dim') : '';
+      return `<div class="tile t${k} ${cls}"><span class="L">${L[k]}</span><span>${esc(o.t)}</span>${rev ? `<span class="cnt2">${c}</span><span class="fill" style="width:${c / tot * 100}%"></span>` : ''}</div>`;
+    }).join('')}</div>`;
+  } else {
+    const tot = Math.max(1, S.answeredN || 0);
+    body = `<div class="sent">${m.parts.map((p, i) => esc(p) + (i < m.blanks.length ? `<span class="slot ${rev ? 'ok' : ''}">${esc(rev ? m.blanks[i].opts[m.blanks[i].ok] : m.blanks[i].label)}</span>` : '')).join('')}</div>`
+      + (rev
+        ? `<div class="right">${m.blanks.map((b, i) => `<div><span>${i + 1} · ${esc(b.label)}</span><b>${Math.round((S.dist[i][b.ok] || 0) / tot * 100)}% chose right</b></div>`).join('')}</div>`
+        : `<div class="blanks">${m.blanks.map((b, i) => `<div class="blank"><span class="bl">${i + 1} · ${esc(b.label)}</span><div class="chips">${S.ord[i].map(oi => `<span class="chip">${esc(b.opts[oi])}</span>`).join('')}</div></div>`).join('')}</div>`);
+  }
+  const top = rev ? ranked().slice(0, 5) : [];
+  ui.innerHTML = `<div class="qwrap ${rev ? 'rv' : ''}">${personCard(m)}
+    <div><div class="qh"><span class="concept">${esc(m.concept)}</span></div>
+      <div style="display:flex;justify-content:space-between;gap:18px;align-items:flex-start"><h2 class="qtext">${esc(m.q)}</h2>
+        ${rev ? '' : `<div class="timer"><div class="ring" id="ring"><span></span></div></div>`}</div>
+      ${body}
+      ${rev ? `<div class="explain"><b>Why:</b> ${esc(m.why)}</div>
+        <div class="top5">${top.map((p, i) => `<div style="animation-delay:${.15 * i}s"><span class="rk">${i + 1}</span>${esc(p.name)} <span class="g">${p.gain ? '+' + U.fmt(p.gain) : ''}</span></div>`).join('')}</div>` : ''}
+      <div class="qfoot">${rev ? `<button class="btn lime" id="nx">${S.qi + 1 < S.ids.length ? 'Next moment' : 'Show the podium'}</button>` : `<span class="answered" id="ans"></span><button class="btn ghost" id="skip">End now</button>`}</div>
+    </div></div>`;
+  if (rev) $('#nx').onclick = next; else { $('#skip').onclick = reveal; drawAnswered() }
+}
+function drawAnswered(){
+  const el = $('#ans'); if (!el) return;
+  const r = roster(), n = Object.keys(r).length, got = Object.keys(allAnswers()).filter(id => r[id]).length;
+  el.innerHTML = `<b>${got}</b> / ${n} answered`;
+}
+function renderFinal(){
+  const r = ranked();
+  if (finalBuilt) return; finalBuilt = true;
+  if (!r.length) { ui.innerHTML = `<div class="final"><h2>No players this time</h2><div class="fbtn"><button class="btn lime" id="again">New game</button></div></div>`; $('#again').onclick = () => { S = { phase: 'setup', code: S.code }; newGame() }; return }
+  const slot = (p, cls, md) => p ? `<div class="ps ${cls}"><div class="av" style="background:${U.color(p.id)}">${esc(initials(p.name))}</div><div class="nm">${esc(p.name)}</div><div class="blk"><div class="md">${md}</div><div class="sc" data-to="${p.score}">0 pts</div></div></div>` : '<div></div>';
+  ui.innerHTML = `<div class="final"><span class="lbl">Final results · ${r.length} players</span>
+    <h2 id="fh">And the best feedback giver is…</h2>
+    <div class="pod">${slot(r[1], 'p2', '2nd')}${slot(r[0], 'p1', '1st')}${slot(r[2], 'p3', '3rd')}</div>
+    <div class="board" id="board">${r.slice(3, 23).map((p, i) => `<div><span class="rk">${i + 4}</span><i class="dot" style="--c:${U.color(p.id)}"></i><span class="nm2">${esc(p.name)}</span><span class="s">${U.fmt(p.score)}</span></div>`).join('')}</div>
+    <div class="fbtn"><button class="btn ghost" id="again">New game</button></div></div>`;
+  $('#again').onclick = () => { finalBuilt = false; newGame() };
+  const show = (cls, snd) => { const el = ui.querySelector('.ps.' + cls); if (!el) return; el.classList.add('in'); snd();
+    const a = el.querySelector('.sc'), to = +a.dataset.to, t0 = performance.now();
+    (function f(t){ const k = Math.min(1, (t - t0) / 1100); a.textContent = U.fmt(to * (1 - Math.pow(1 - k, 3))) + ' pts'; if (k < 1) requestAnimationFrame(f) })(t0) };
+  U.sfx.drumroll(2.4);
+  setTimeout(() => show('p3', U.sfx.hit), 2600);
+  setTimeout(() => show('p2', U.sfx.hit), 3700);
+  setTimeout(() => { show('p1', U.sfx.fanfare); U.confetti(); const h = $('#fh'); if (h && r[0]) h.textContent = r[0].name + ' gives the best feedback!' }, 5000);
+  setTimeout(() => { const b = $('#board'); if (b) b.classList.add('in') }, 5900);
+}
+
+listen(); if (S.phase === 'final') finalBuilt = false; render();
+}
+</script>
+</body>
+</html>
