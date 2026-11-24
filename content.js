@@ -11,7 +11,7 @@ const P = {
 };
 
 const MOMENTS = [
-  { id: "m-timing", who: "marta", type: "mc", concept: "Criterion 1 · Timing",
+  { id: "m-timing", who: "marta", type: "mc", concept: "Criteria 1 & 2 · Timing + context",
     situ: "Her daily sales report has arrived two hours late for three days in a row. The morning meeting runs on old numbers.",
     q: "When do you give the feedback?",
     o: [
@@ -21,7 +21,7 @@ const MOMENTS = [
       { t: "Mention it in tomorrow's team meeting.", p: 0 }
     ],
     why: "Soon enough to stop it happening again, and at a moment she can really listen. Waiting a month lets the problem grow; a quick chat message gives her no support." },
-  { id: "m-context", who: "rui", type: "mc", concept: "Criterion 2 · Context",
+  { id: "m-context", who: "rui", type: "mc", concept: "Criteria 1 & 2 · Timing + context",
     situ: "He skipped the safety checklist sign-off twice this week. Right now he's at the machines with three younger technicians.",
     q: "Where do you raise it?",
     o: [
@@ -31,7 +31,7 @@ const MOMENTS = [
       { t: "At next month's safety meeting, to everyone.", p: 0 }
     ],
     why: "Context includes who is present. Correcting an expert in front of juniors humiliates him and guarantees defensiveness. An email is private but feels bureaucratic." },
-  { id: "m-sbi-carolina", who: "carolina", type: "fill", concept: "SBI model · Situation, Behaviour, Impact",
+  { id: "m-sbi-carolina", who: "carolina", type: "fill", concept: "Criterion 3 · Descriptive (SBI)",
     situ: "She approved a big supplier order without checking stock. The warehouse is now full.",
     q: "Build your feedback. She likes it short and factual.",
     parts: ["", " ", ", so ", ". Can we add a stock check to approvals?"],
@@ -71,7 +71,7 @@ const MOMENTS = [
       { t: "Add two more examples of the problem.", p: 0 }
     ],
     why: "Feedback only works if you let the other person explain their actions. Her answer will show you the real cause. Saying 'it's fine' is kind but cancels the message." },
-  { id: "m-harbour", who: "tomas", type: "mc", concept: "Criterion 4 · A safe harbour",
+  { id: "m-harbour", who: "tomas", type: "mc", concept: "Criterion 4 · Free silence (a safe harbour)",
     situ: "In a client presentation, Tomás clicks to the wrong slide, loses his place and freezes. The client is watching.",
     q: "What do you do in the moment?",
     o: [
@@ -133,16 +133,16 @@ const MOMENTS = [
     why: "Timing includes the receiver's inner timing. Right now she can't hear it, but a week is too long. Soon, private and calm is best." }
 ];
 
-// 2 sentence builders + 3 tap questions, each on a different concept; avoid last game's moments where possible
+// 4 fixed questions, one per criterion, always in this order:
+// timing + context -> descriptive -> free silence -> counter-feedback.
+// A rematch swaps in the alternate version of the first two so the room sees something new.
+const SETS = [
+  ["m-timing", "m-descriptive", "m-harbour", "m-counter"],
+  ["m-context", "m-sbi-carolina", "m-harbour", "m-counter"]
+];
 function pick(lastIds){
-  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   lastIds = lastIds || [];
-  const fresh = m => !lastIds.includes(m.id);
-  const order = list => [...shuffle(list.filter(fresh)), ...shuffle(list.filter(m => !fresh(m)))];
-  const used = new Set(), fills = [], mcs = [];
-  for (const m of order(MOMENTS.filter(m => m.type === "fill"))) if (fills.length < 2 && !used.has(m.concept)) { fills.push(m); used.add(m.concept); }
-  for (const m of order(MOMENTS.filter(m => m.type === "mc"))) if (mcs.length < 3 && !used.has(m.concept)) { mcs.push(m); used.add(m.concept); }
-  return shuffle([...fills, ...mcs]).map(m => m.id);
+  return (lastIds[0] === SETS[0][0] ? SETS[1] : SETS[0]).slice();
 }
 const byId = id => MOMENTS.find(m => m.id === id);
 // base points: tap = 3/1/0 for the option; fill = 1 per correct blank
